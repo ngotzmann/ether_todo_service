@@ -1,0 +1,27 @@
+server:
+  # local, dev, staging, production
+  environment: local
+  address: 127.0.0.1
+  port: 3000
+
+webservice:
+  sessionSecret: "c7jlXWhJIwUHfHNMx6xEFoLXDwxY544steL"
+  signedStringTokenSecret: "b2G1vhKNuAfPUC0bpGXYVMKrdTrpaP6SaBN"
+  jwtSecret: "GzMHzwBUdyXcnY0nA2KT1NsZIcjuZDIfHkO"
+  sessionName: "jwt_user_management"
+
+database:
+  dialect:
+  address:
+  port:
+  database:
+  user:
+  password:
+  maxIdleConnections:
+  logging: false
+
+#panic, fatal, error, warn, info, debug, trace
+logging:
+  file: ../service.log
+  level: info
+  timestampFormat: "02-01-2006_15:04:05"

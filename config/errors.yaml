@@ -1,0 +1,7 @@
+gorrors:
+  - errorTitle: SessionError
+    errorCode: 500
+    errorMessage: Your session is corrupted
+  - errorTitle: ExampleError
+    errorCode: 500
+    errorMessage: Something is broken
