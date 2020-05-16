@@ -1,4 +1,4 @@
-package domain
+package todo
 
 type Usecase interface {
 	Function() error

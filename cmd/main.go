@@ -12,6 +12,6 @@ func main() {
 	c := gommon.NewConfig("config/")
 	gommon.InitLogrus(c.Logging.Level, c.Logging.File, c.Logging.TimestampFormat)
 
-	e := v1.EchoHandler("./")
+	e := v1.EchoHandler("config/")
 	e.Logger.Fatal(e.Start(c.Server.Address + ":" + c.Server.Port))
 }

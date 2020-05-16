@@ -5,10 +5,8 @@ server:
   port: 3000
 
 webservice:
-  sessionSecret: "c7jlXWhJIwUHfHNMx6xEFoLXDwxY544steL"
-  signedStringTokenSecret: "b2G1vhKNuAfPUC0bpGXYVMKrdTrpaP6SaBN"
-  jwtSecret: "GzMHzwBUdyXcnY0nA2KT1NsZIcjuZDIfHkO"
-  sessionName: "jwt_user_management"
+  sessionSecret: "VmkOCdTRkjzkxWuLFN8JI0jDP0g2N4LiS7h"
+  sessionName: "ether_todo"
 
 database:
   dialect:

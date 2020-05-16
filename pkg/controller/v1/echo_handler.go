@@ -35,9 +35,7 @@ func EchoHandler(configPath string) *echo.Echo {
 
 	//Declaration of routes
 	e.POST("/unrestricted", Unrestricted)
-	r := e.Group("/r")
-	r.Use(middleware.JWT([]byte(c.Webservice.JwtSecret)))
-	r.GET("/restricted", Restricted)
+	e.GET("/unrestricted", Unrestricted)
 
 	return e
 }

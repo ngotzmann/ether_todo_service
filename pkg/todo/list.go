@@ -1,17 +1,29 @@
-package domain
+package todo
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/ngotzmann/gorror"
-	"time"
 )
 
-type Model struct {
-	ID uuid.UUID `json:"id"`
+type LiveTime string
+
+const (
+	Day   LiveTime = "tmp"
+	Month LiveTime = "mth"
+	Year  LiveTime = "keep"
+)
+
+type List struct {
+	ID        uuid.UUID `json:"id"`
 	UpdatedAt time.Time `json:"updated_at"`
 	CreatedAt time.Time `json:"created_at"`
+	Name      string    `json:"name" validate:"required"`
+	Tasks     []Task    `json:"tasks"`
+	LiveTime  LiveTime  `json:"live_time, validate:"required""`
 }
 
 func (m *Model) Validation() error {
