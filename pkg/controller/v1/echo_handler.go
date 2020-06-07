@@ -34,8 +34,8 @@ func EchoHandler(configPath string) *echo.Echo {
 	}))
 
 	//Declaration of routes
-	e.POST("/unrestricted", Unrestricted)
-	e.GET("/unrestricted", Unrestricted)
+	e.GET("/todo/list/:name", FindListByName)
+	e.POST("/todo/list", SaveList)
 
 	return e
 }

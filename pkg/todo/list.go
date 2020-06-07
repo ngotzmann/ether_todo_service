@@ -1,11 +1,9 @@
 package todo
 
 import (
+	"ether_todo/pkg/controller/persistence/gormmon"
 	"fmt"
-	"time"
-
 	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
 	"github.com/ngotzmann/gorror"
 )
 
@@ -18,18 +16,20 @@ const (
 )
 
 type List struct {
-	ID        uuid.UUID `json:"id"`
-	UpdatedAt time.Time `json:"updated_at"`
-	CreatedAt time.Time `json:"created_at"`
-	Name      string    `json:"name" validate:"required"`
-	Tasks     []Task    `json:"tasks"`
-	LiveTime  LiveTime  `json:"live_time, validate:"required""`
+	gormmon.Base
+	Name      string    `json:"name" validate:"required" gorm:"name"`
+	Tasks     []Task    `json:"tasks" gorm:"foreignkey:list_id"`
+	LiveTime  LiveTime  `json:"live_time" validate:"required"`
 }
 
-func (m *Model) Validation() error {
+func (l *List) Validation() error {
+	err :=l.ValidateLiveTimeEnum()
+	if err != nil {
+		return err
+	}
 	v := validator.New()
 	var errMsgs string
-	err := v.Struct(m)
+	err = v.Struct(l)
 	if err != nil {
 		for _, fe := range err.(validator.ValidationErrors) {
 			specErrMsg := fmt.Sprintf("%v", fe)
@@ -38,4 +38,12 @@ func (m *Model) Validation() error {
 		err = gorror.CreateError(gorror.ValidationError, errMsgs)
 	}
 	return err
+}
+
+func (l *List) ValidateLiveTimeEnum() error {
+	switch l.LiveTime {
+	case Day, Month, Year:
+		return nil
+	}
+	return gorror.CreateError(gorror.ValidationError, "Not allowed LiveTime value")
 }

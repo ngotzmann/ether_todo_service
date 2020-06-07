@@ -1,6 +1,7 @@
 package todo
 
 import (
+	"ether_todo/pkg/controller/persistence/gormmon"
 	"fmt"
 	"time"
 
@@ -10,13 +11,13 @@ import (
 )
 
 type Task struct {
-	ID         uuid.UUID `json:"id"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	CreatedAt  time.Time `json:"created_at"`
+	gormmon.Base
 	Task       string    `json:"task" validate:"required"`
 	ChildTasks []Task    `json:"child_tasks"`
 	DueDate    time.Time `json:"due_date" validate:"gte"`
 	Color      string    `json:"color" validate:"required,hexcolor"`
+	Done 	   bool      `json:"done"`
+	ListId    uuid.UUID  `gorm:"list_id"`
 }
 
 func (m *Task) Validation() error {
