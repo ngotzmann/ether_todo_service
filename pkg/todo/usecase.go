@@ -5,6 +5,7 @@ import "github.com/ngotzmann/gorror"
 type Usecase interface {
 	FindListByName(name string) (*List, error)
 	SaveList(l *List) (*List, error)
+	DeleteListByName(name string) error
 }
 
 type usecase struct {
@@ -38,4 +39,11 @@ func (uc *usecase) SaveList(l *List) (*List, error) {
 			return nil, err
 		}
 	return l, nil
+}
+
+func (uc *usecase) DeleteListByName(name string) error {
+	if name == "" {
+		return gorror.CreateError(gorror.ValidationError, "name is missing")
+	}
+	return uc.repo.DeleteListByName(&List{Name: name})
 }

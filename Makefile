@@ -6,7 +6,7 @@ help: ## Prints help for targets with comments
 lifecycle: ## Possible lifecycle of the app
 	@echo "init-project -> check-tools -> update -> test -> build -> docker-build"
 
-init-project: ## Initialize project, add some more needed dependencies
+init: ## Initialize project, add some more needed dependencies
 	@go get -u golang.org/x/lint/golint
 	@go get github.com/gavv/httpexpect/v2
 	@go get github.com/swaggo/swag/cmd/swag

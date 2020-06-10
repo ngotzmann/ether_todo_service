@@ -164,6 +164,8 @@ github.com/ngotzmann/gommon v0.0.0-20200501190317-6860770b853c h1:OLwk/hS7Q30rg9
 github.com/ngotzmann/gommon v0.0.0-20200501190317-6860770b853c/go.mod h1:em90rTsc8GOFkFf6RRJYgYjSi639xzw1JDcbs8hEWUc=
 github.com/ngotzmann/gommon v0.0.0-20200507185600-2cd0729ce1f2 h1:7lf8bTNX+5kU8Cb5vJQQ8yX9ySJQAIc1gD5hRiesrCM=
 github.com/ngotzmann/gommon v0.0.0-20200507185600-2cd0729ce1f2/go.mod h1:G0R5npnCjcXAo3zrzMIK7KkWT7Sy2TzcujhTDMdF9UI=
+github.com/ngotzmann/gormmon v0.0.0-20200610200849-688c6794524c h1:IOIJHw8mGla+ooM47aKxBe+dNvsHB07OO9NKgaosaRQ=
+github.com/ngotzmann/gormmon v0.0.0-20200610200849-688c6794524c/go.mod h1:9YpbFNCUTBNxiwmu9GXtadlxjUjWhZNgkYje7BCMx6U=
 github.com/ngotzmann/gorror v0.0.0-20200501185759-c32a4c80c4f6 h1:OrqsJpdZpe1yjXFj6hnxS+8vscJYCxymbNrLhN0ITwQ=
 github.com/ngotzmann/gorror v0.0.0-20200501185759-c32a4c80c4f6/go.mod h1:9kjj5ok+mM2UmZXjFH+buLPmSjFvMzyANkqRIXfCjgc=
 github.com/ngotzmann/gorror v0.0.0-20200501190053-c912ebcb1d2f h1:2EYwZk0plnuNkj8fe+8A0tLH0aJAUdz9S13zauDHyoc=

@@ -27,11 +27,9 @@ func SaveList(c echo.Context) error {
 	if err := c.Bind(l); err != nil {
 		return gorror.CreateError(gorror.InternalServerError, err.Error())
 	}
-
 	repo := persistence.NewTodoListRepo()
 	uc := todo.NewUsecase(repo, todo.NewService(repo))
 	l, err := uc.SaveList(l)
-
 	if err != nil {
 		return err
 	} else {

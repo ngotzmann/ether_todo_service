@@ -1,9 +1,9 @@
 package todo
 
 import (
-	"ether_todo/pkg/controller/persistence/gormmon"
 	"fmt"
 	"github.com/go-playground/validator/v10"
+	"github.com/ngotzmann/gormmon"
 	"github.com/ngotzmann/gorror"
 )
 

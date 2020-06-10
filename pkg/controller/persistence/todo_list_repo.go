@@ -1,9 +1,9 @@
 package persistence
 
 import (
-	"ether_todo/pkg/controller/persistence/gormmon"
 	"ether_todo/pkg/todo"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/ngotzmann/gormmon"
 	"github.com/ngotzmann/gorror"
 )
 

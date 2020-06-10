@@ -1,8 +1,8 @@
 package todo
 
 import (
-	"ether_todo/pkg/controller/persistence/gormmon"
 	"fmt"
+	"github.com/ngotzmann/gormmon"
 	"time"
 
 	"github.com/go-playground/validator/v10"

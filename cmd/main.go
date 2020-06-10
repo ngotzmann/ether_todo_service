@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ether_todo/pkg/controller/persistence/gormmon"
 	v1 "ether_todo/pkg/controller/v1"
+	"github.com/ngotzmann/gormmon"
 
 	"github.com/ngotzmann/gommon"
 	"github.com/ngotzmann/gorror"
