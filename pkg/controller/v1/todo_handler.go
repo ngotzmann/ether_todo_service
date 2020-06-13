@@ -36,3 +36,10 @@ func SaveList(c echo.Context) error {
 		return c.JSON(http.StatusOK, l)
 	}
 }
+
+func CleanOutatedLists(c echo.Context) error {
+	repo := persistence.NewTodoListRepo()
+	uc := todo.NewUsecase(repo, todo.NewService(repo))
+	uc.CleanOutatedLists()
+	return c.JSON(http.StatusOK, "frutti")
+}

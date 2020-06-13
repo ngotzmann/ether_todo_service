@@ -1,6 +1,9 @@
 package todo
 
-import "github.com/ngotzmann/gorror"
+import (
+	"fmt"
+	"github.com/ngotzmann/gorror"
+)
 
 type Usecase interface {
 	FindListByName(name string) (*List, error)
@@ -46,4 +49,9 @@ func (uc *usecase) DeleteListByName(name string) error {
 		return gorror.CreateError(gorror.ValidationError, "name is missing")
 	}
 	return uc.repo.DeleteListByName(&List{Name: name})
+}
+
+func (uc *usecase) CleanOutatedLists() {
+	fmt.Println("asdasdasdasdasdasdasd")
+	uc.repo.DeleteOutdatedLists()
 }

@@ -5,6 +5,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/ngotzmann/gormmon"
 	"github.com/ngotzmann/gorror"
+	"github.com/sirupsen/logrus"
 )
 
 
@@ -53,15 +54,24 @@ func (t *todoListRepo) DeleteListByName(l *todo.List) error {
 	return nil
 }
 
-/*
-ALTER TABLE tasks ADD CONSTRAINT list_fkey FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE;
-db.AutoMigrate(&todo.List{}, &todo.Task{})
-	db.Create(&todo.List{
-		ID:        uuid.MustParse("696f7dcd-ce91-4bea-ac87-62dfe33b8329"),
-		UpdatedAt: time.Now(),
-		CreatedAt: time.Now(),
-		Name:      "ketchup",
-	//	Tasks:     nil,
-		LiveTime:  "keep",
-	})
-*/
+func (t *todoListRepo) DeleteOutdatedLists() {
+	db, err := gormmon.GetGormDB()
+	if err != nil {
+		err = gorror.CreateError(gorror.DatabaseError, err.Error())
+		logrus.Error(err)
+	}
+	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '1 day'", todo.Day).Delete(&todo.List{})
+	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '30 day'", todo.Month).Delete(&todo.List{})
+	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '365 day'", todo.Year).Delete(&todo.List{})
+}
+
+func (t *todoListRepo) Migration() error {
+	db, err := gormmon.GetGormDB()
+	if err != nil {
+		err = gorror.CreateError(gorror.DatabaseError, err.Error())
+		return err
+	}
+	db.AutoMigrate(&todo.List{}, &todo.Task{})
+	db.Model(&todo.Task{}).AddForeignKey("list_id", "lists(id)", "CASCADE", "CASCADE")
+	return nil
+}
