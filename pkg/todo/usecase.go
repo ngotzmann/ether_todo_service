@@ -1,7 +1,6 @@
 package todo
 
 import (
-	"fmt"
 	"github.com/ngotzmann/gorror"
 )
 
@@ -52,6 +51,5 @@ func (uc *usecase) DeleteListByName(name string) error {
 }
 
 func (uc *usecase) CleanOutatedLists() {
-	fmt.Println("asdasdasdasdasdasdasd")
 	uc.repo.DeleteOutdatedLists()
 }
