@@ -22,7 +22,7 @@ check-tools: ## Print all available versions
 	@docker --version
 
 update: ## Update go dependencies
-	@go get -u
+	@go get -v all
 	@go mod download
 	@go mod tidy
 	@go mod vendor
