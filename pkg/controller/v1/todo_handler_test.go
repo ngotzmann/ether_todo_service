@@ -1,13 +1,10 @@
 package v1
 
 import (
-	"ether_todo/pkg/controller/persistence"
-	"ether_todo/pkg/todo"
+	"ether_todo/pkg/modules"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
 	"github.com/labstack/gommon/log"
-	"github.com/ngotzmann/gommon"
-	"github.com/ngotzmann/gormmon"
 	"github.com/ngotzmann/gorror"
 	"net/http"
 	"net/http/httptest"
@@ -22,8 +19,6 @@ func positivIntegrationTestCreate(e *httpexpect.Expect) {
 		LiveTime: "keep",
 	})
 	testFindListByNameSuccessful(e, name)
-	repo := persistence.NewTodoListRepo()
-	uc := todo.NewUsecase(repo, todo.NewService(repo))
 	err := uc.DeleteListByName(name)
 	if err != nil {
 		log.Error(err)
@@ -45,8 +40,6 @@ func positivIntegrationTestOverwrite(e *httpexpect.Expect) {
 	})
 	testFindListByNameSuccessful(e, name)
 
-	repo := persistence.NewTodoListRepo()
-	uc := todo.NewUsecase(repo, todo.NewService(repo))
 	err := uc.DeleteListByName(name)
 	if err != nil {
 		log.Error(err)
@@ -86,25 +79,15 @@ func testFindListByNameSuccessful(e *httpexpect.Expect, name string) {
 }
 
 func TestEchoClient(t *testing.T) {
-	cP := "../../../config/"
-	gorror.Init(cP)
-	c := gommon.NewConfig(cP)
-	gormmon.InitGormDB(gormmon.GormConfig{
-		Host:               c.Database.Address,
-		Port:               c.Database.Port,
-		DBName:             c.Database.Database,
-		Username:           c.Database.User,
-		Password:           c.Database.Password,
-		MaxIdleConnections: c.Database.MaxIdleConnections,
-		ShouldLog:          c.Database.Logging,
-	})
-	h := EchoHandler(cP)
-	
-	server := httptest.NewServer(h)
-	defer server.Close()
+	cfg := modules.TestConfig()
+	gorror.Init(cfg.GorrorFilePath)
+	h := modules.DefaultHttpServer()
+	h = Endpoints(h)
+	srv := httptest.NewServer(h)
+	defer srv.Close()
 
 	e := httpexpect.WithConfig(httpexpect.Config{
-		BaseURL:  server.URL,
+		BaseURL:  srv.URL,
 		Reporter: httpexpect.NewAssertReporter(t),
 		Printers: []httpexpect.Printer{
 			httpexpect.NewDebugPrinter(t, true),

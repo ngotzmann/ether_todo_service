@@ -1,4 +1,4 @@
-package v1
+package modules
 
 import (
 	"github.com/gorilla/sessions"
@@ -6,19 +6,18 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	"github.com/ngotzmann/gommon"
 	"github.com/ngotzmann/gorror"
 )
 
-func EchoHandler(configPath string) *echo.Echo {
-	c := gommon.NewConfig(configPath)
+func DefaultEchoHttpServer(cfg *Config) *echo.Echo {
 	e := echo.New()
-	e.Logger.SetLevel(log.DEBUG)
+	e.Logger.SetLevel(log.INFO)
+	e.HideBanner = true
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
 	e.HTTPErrorHandler = gorror.CustomEchoHTTPErrorHandler
-	e.Use(session.Middleware(sessions.NewCookieStore([]byte(c.Webservice.SessionSecret))))
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte(cfg.SessionSecret))))
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
@@ -32,10 +31,6 @@ func EchoHandler(configPath string) *echo.Echo {
 		HSTSMaxAge:            3600,
 		ContentSecurityPolicy: "default-src 'self'",
 	}))
-
-	//Declaration of routes
-	e.GET("/todo/list/:name", FindListByName)
-	e.POST("/todo/list", SaveList)
 
 	return e
 }

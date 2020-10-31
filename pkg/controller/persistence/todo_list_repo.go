@@ -1,23 +1,22 @@
 package persistence
 
 import (
+	"ether_todo/pkg/modules"
 	"ether_todo/pkg/todo"
+	"github.com/google/uuid"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/ngotzmann/gormmon"
 	"github.com/ngotzmann/gorror"
-	"github.com/sirupsen/logrus"
 )
-
 
 type todoListRepo struct {
 }
 
-func NewTodoListRepo() *todoListRepo {
+func NewTodoListRepo() todo.IRepository {
 	return &todoListRepo{}
 }
 
 func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
-	db, err := gormmon.GetGormDB()
+	db, err :=modules.DefaultGorm()
 	if err != nil {
 		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return nil, err
@@ -26,7 +25,7 @@ func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
 	l := &todo.List{}
 	db.Where("name = ?", name).Preload("Tasks").Find(&l)
 
-	if  l.ID.String() == "00000000-0000-0000-0000-000000000000" {
+	if l.ID.String() == "00000000-0000-0000-0000-000000000000" {
 		return nil, nil
 	} else {
 		return l, nil
@@ -34,10 +33,13 @@ func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
 }
 
 func (t *todoListRepo) SaveList(l *todo.List) (*todo.List, error) {
-	db, err := gormmon.GetGormDB()
+	db, err := modules.DefaultGorm()
 	if err != nil {
 		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return nil, err
+	}
+	if l.ID.String() == "00000000-0000-0000-0000-000000000000"  {
+		l.ID = uuid.New()
 	}
 
 	db.Save(&l)
@@ -45,7 +47,7 @@ func (t *todoListRepo) SaveList(l *todo.List) (*todo.List, error) {
 }
 
 func (t *todoListRepo) DeleteListByName(l *todo.List) error {
-	db, err := gormmon.GetGormDB()
+	db, err :=modules.DefaultGorm()
 	if err != nil {
 		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return err
@@ -55,10 +57,11 @@ func (t *todoListRepo) DeleteListByName(l *todo.List) error {
 }
 
 func (t *todoListRepo) DeleteOutdatedLists() {
-	db, err := gormmon.GetGormDB()
+	db, err :=modules.DefaultGorm()
 	if err != nil {
 		err = gorror.CreateError(gorror.DatabaseError, err.Error())
-		logrus.Error(err)
+		//TODO:
+		//log.Error(err)
 	}
 	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '1 day'", todo.Day).Delete(&todo.List{})
 	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '30 day'", todo.Month).Delete(&todo.List{})
@@ -66,7 +69,7 @@ func (t *todoListRepo) DeleteOutdatedLists() {
 }
 
 func (t *todoListRepo) Migration() error {
-	db, err := gormmon.GetGormDB()
+	db, err :=modules.DefaultGorm()
 	if err != nil {
 		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return err

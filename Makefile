@@ -32,6 +32,7 @@ test: ## Execute linter and go tests
 	@golint || echo "🔥 golint syntax-check failed"
 
 build: ## Build This service
+#	@go generate **/*.go
 	@go build cmd/main.go || echo "🔥 go build failed"
 
 docker-build: ## Build application and put it in docker container

@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"ether_todo/pkg/controller/persistence"
+	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
 	"github.com/ngotzmann/gorror"
 	"net/http"
@@ -9,12 +9,18 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var uc = injector.TodoUsecase()
+
+func Endpoints(e *echo.Echo) *echo.Echo {
+	e.GET("/todo/list/:name", FindListByName)
+	e.POST("/todo/list", SaveList)
+	return e
+}
+
 func FindListByName(c echo.Context) error {
 	name := c.Param("name")
-	repo := persistence.NewTodoListRepo()
-	uc := todo.NewUsecase(repo, todo.NewService(repo))
-	l, err := uc.FindListByName(name)
 
+	l, err := uc.FindListByName(name)
 	if err != nil {
 		return err
 	} else {
@@ -27,8 +33,7 @@ func SaveList(c echo.Context) error {
 	if err := c.Bind(l); err != nil {
 		return gorror.CreateError(gorror.InternalServerError, err.Error())
 	}
-	repo := persistence.NewTodoListRepo()
-	uc := todo.NewUsecase(repo, todo.NewService(repo))
+
 	l, err := uc.SaveList(l)
 	if err != nil {
 		return err
@@ -38,8 +43,6 @@ func SaveList(c echo.Context) error {
 }
 
 func CleanOutatedLists(c echo.Context) error {
-	repo := persistence.NewTodoListRepo()
-	uc := todo.NewUsecase(repo, todo.NewService(repo))
 	uc.CleanOutatedLists()
 	return c.JSON(http.StatusOK, "frutti")
 }

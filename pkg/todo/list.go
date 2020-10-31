@@ -3,8 +3,9 @@ package todo
 import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"github.com/ngotzmann/gormmon"
+	"github.com/google/uuid"
 	"github.com/ngotzmann/gorror"
+	"time"
 )
 
 type LiveTime string
@@ -16,7 +17,11 @@ const (
 )
 
 type List struct {
-	gormmon.Base
+	ID        uuid.UUID `json:"id" gorm:"type:uuid;primary_key;"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at" sql:"index"`
+
 	Name      string    `json:"name" validate:"required" gorm:"name"`
 	Tasks     []Task    `json:"tasks" gorm:"foreignkey:list_id"`
 	LiveTime  LiveTime  `json:"live_time" validate:"required"`

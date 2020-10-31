@@ -2,11 +2,16 @@ package todo
 
 import "strings"
 
-type Service struct {
-	repo Repository
+type IService interface {
+	IsListDuplicated(name string) (bool, error)
+	OverwriteExistsList(l *List) (*List, error)
 }
 
-func NewService(repo Repository) *Service {
+type Service struct {
+	repo IRepository
+}
+
+func NewService(repo IRepository) IService {
 	return &Service{
 		repo: repo,
 	}

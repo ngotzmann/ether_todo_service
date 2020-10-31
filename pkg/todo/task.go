@@ -2,7 +2,6 @@ package todo
 
 import (
 	"fmt"
-	"github.com/ngotzmann/gormmon"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -11,7 +10,11 @@ import (
 )
 
 type Task struct {
-	gormmon.Base
+	ID        uuid.UUID `json:"id" gorm:"type:uuid;primary_key;"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at" sql:"index"`
+
 	Task       string    `json:"task" validate:"required"`
 	ChildTasks []Task    `json:"child_tasks"`
 	DueDate    time.Time `json:"due_date" validate:"gte"`

@@ -8,8 +8,8 @@ import (
 	"github.com/ngotzmann/gorror"
 )
 
-func getTestModel() *Model {
-	return &Model{
+func getTestModel() *List {
+	return &List{
 		ID:        uuid.New(),
 		UpdatedAt: time.Now(),
 		CreatedAt: time.Now(),

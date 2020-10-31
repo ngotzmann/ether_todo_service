@@ -4,25 +4,26 @@ import (
 	"github.com/ngotzmann/gorror"
 )
 
-type Usecase interface {
+type IUsecase interface {
 	FindListByName(name string) (*List, error)
 	SaveList(l *List) (*List, error)
 	DeleteListByName(name string) error
+	CleanOutatedLists()
 }
 
-type usecase struct {
-	repo    Repository
-	service *Service
+type Usecase struct {
+	repo    IRepository
+	service IService
 }
 
-func NewUsecase(repo Repository, service *Service) *usecase {
-	return &usecase{
+func NewUsecase(repo IRepository, service IService) IUsecase {
+	return &Usecase{
 		repo:    repo,
 		service: service,
 	}
 }
 
-func (uc *usecase) FindListByName(name string) (*List, error) {
+func (uc *Usecase) FindListByName(name string) (*List, error) {
 	if name == "" {
 		err := gorror.CreateError(gorror.ValidationError, "name is not set")
 		return nil, err
@@ -31,7 +32,7 @@ func (uc *usecase) FindListByName(name string) (*List, error) {
 	return l, err
 }
 
-func (uc *usecase) SaveList(l *List) (*List, error) {
+func (uc *Usecase) SaveList(l *List) (*List, error) {
 	err := l.Validation()
 	if err != nil {
 		return nil, err
@@ -43,13 +44,13 @@ func (uc *usecase) SaveList(l *List) (*List, error) {
 	return l, nil
 }
 
-func (uc *usecase) DeleteListByName(name string) error {
+func (uc *Usecase) DeleteListByName(name string) error {
 	if name == "" {
 		return gorror.CreateError(gorror.ValidationError, "name is missing")
 	}
 	return uc.repo.DeleteListByName(&List{Name: name})
 }
 
-func (uc *usecase) CleanOutatedLists() {
+func (uc *Usecase) CleanOutatedLists() {
 	uc.repo.DeleteOutdatedLists()
 }
