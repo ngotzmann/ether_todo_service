@@ -1,0 +1,11 @@
+database:
+  dialect: postgres
+  address: localhost
+  port: 5432
+  database: test
+  user: test
+  password: t3sT
+  maxIdleConnections: 10
+  logging: true
+  audit: false
+  SSLMode: disable

@@ -5,19 +5,26 @@ import (
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/modules"
 	"github.com/jasonlvhit/gocron"
-	"github.com/ngotzmann/gorror"
+	"github.com/kataras/i18n"
+	"strconv"
 )
 
 func main() {
-	gorror.Init(modules.DefaultConfig().GorrorFilePath)
+	_, err := i18n.New(i18n.Glob("./locales/*/*"), "en-US")
+	if err != nil {
+		panic(err)
+	}
+
 	e := modules.DefaultHttpServer()
 	e = v1.Endpoints(e)
 	startCron()
-	e.Logger.Fatal(e.Start(":"+modules.DefaultConfig().Port))
+	e.Logger.Fatal(e.Start(":" + strconv.Itoa(modules.ProvideServiceCfg().Port)))
 }
 
 func startCron() {
-	uc := injector.TodoUsecase()
- 	gocron.Every(1).Day().Do(uc.CleanOutatedLists)
- 	gocron.Start()
- }
+	err := gocron.Every(1).Day().Do(injector.TodoUsecase().CleanOutatedLists)
+	if err != nil {
+		panic(err)
+	}
+	gocron.Start()
+}

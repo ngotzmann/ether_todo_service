@@ -1,0 +1,8 @@
+server:
+  address: 127.0.0.1
+  port: 21000
+  sessionSecret: "VmkOCdTRkjzkxWuLFN8JI0jDP0g2N4LiS7h"
+  sessionName: "ether_todo"
+  defaultLang: "en-US"
+
+

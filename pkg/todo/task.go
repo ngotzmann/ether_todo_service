@@ -1,12 +1,13 @@
 package todo
 
 import (
+	"errors"
 	"fmt"
+	"github.com/kataras/i18n"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
-	"github.com/ngotzmann/gorror"
 )
 
 type Task struct {
@@ -32,7 +33,7 @@ func (m *Task) Validation() error {
 			specErrMsg := fmt.Sprintf("%v", fe)
 			errMsgs += specErrMsg + "; "
 		}
-		err = gorror.CreateError(gorror.ValidationError, errMsgs)
+		err = errors.New(i18n.Tr("en-US","ValidationError") + " " + errMsgs)
 	}
 	return err
 }

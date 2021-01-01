@@ -1,9 +1,10 @@
 package v1
 
 import (
+	"errors"
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
-	"github.com/ngotzmann/gorror"
+	"github.com/kataras/i18n"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,10 +32,12 @@ func FindListByName(c echo.Context) error {
 func SaveList(c echo.Context) error {
 	l := &todo.List{}
 	if err := c.Bind(l); err != nil {
-		return gorror.CreateError(gorror.InternalServerError, err.Error())
+		return err
 	}
+	//l, err := uc.SaveList(l)
+	asd := i18n.Tr("en-US","ValidationError")
+	err := errors.New(asd)
 
-	l, err := uc.SaveList(l)
 	if err != nil {
 		return err
 	} else {

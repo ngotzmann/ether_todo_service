@@ -1,26 +1,28 @@
 package modules
 
 import (
+	"ether_todo/pkg/modules/config"
 	"github.com/jinzhu/gorm"
+	"strconv"
 )
 
 
-func DefaultGormDB(cfg *Config, log *Logger) (*gorm.DB, error) {
+func DefaultGormDB(cfg config.Database) (*gorm.DB, error) {
 
-	dsn := "host="+cfg.DBAddress+
-		   " port="+cfg.DBPort+
-		   " user="+cfg.DBUser+
-		   " password="+cfg.DBPassword+
+	dsn := "host="+cfg.Address+
+		   " port="+strconv.Itoa(cfg.Port)+
+		   " user="+cfg.User+
+		   " password="+cfg.Password+
 		   " dbname="+cfg.Database+
-		   " sslmode="+cfg.DBSSLMode
+		   " sslmode="+cfg.SSLMode
 
 	db, err := gorm.Open("postgres", dsn)
 
 	if err != nil {
 		return nil, err
 	}
-	db.DB().SetMaxIdleConns(cfg.DBMaxIdleConnections)
-	if cfg.DBShouldLog {
+	db.DB().SetMaxIdleConns(cfg.MaxIdleConnections)
+	if cfg.ShouldLog {
 		db.LogMode(true)
 	} else {
 		db.LogMode(false)

@@ -1,22 +1,22 @@
 package modules
 
 import (
+	"ether_todo/pkg/modules/config"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	"github.com/ngotzmann/gorror"
 )
 
-func DefaultEchoHttpServer(cfg *Config) *echo.Echo {
+func DefaultEchoHttpServer(cfg config.Server) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.HideBanner = true
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
-	e.HTTPErrorHandler = gorror.CustomEchoHTTPErrorHandler
+	e.HTTPErrorHandler = CustomEchoHTTPErrorHandler
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte(cfg.SessionSecret))))
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

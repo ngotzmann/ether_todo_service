@@ -1,7 +1,8 @@
 package todo
 
 import (
-	"github.com/ngotzmann/gorror"
+	"errors"
+	"github.com/kataras/i18n"
 )
 
 type IUsecase interface {
@@ -25,7 +26,7 @@ func NewUsecase(repo IRepository, service IService) IUsecase {
 
 func (uc *Usecase) FindListByName(name string) (*List, error) {
 	if name == "" {
-		err := gorror.CreateError(gorror.ValidationError, "name is not set")
+		err := errors.New(i18n.Tr("en-US", "ValidationError") + " name is missing")
 		return nil, err
 	}
 	l, err := uc.repo.FindListByName(name)
@@ -33,6 +34,7 @@ func (uc *Usecase) FindListByName(name string) (*List, error) {
 }
 
 func (uc *Usecase) SaveList(l *List) (*List, error) {
+	uc.repo.Migration()
 	err := l.Validation()
 	if err != nil {
 		return nil, err
@@ -46,7 +48,7 @@ func (uc *Usecase) SaveList(l *List) (*List, error) {
 
 func (uc *Usecase) DeleteListByName(name string) error {
 	if name == "" {
-		return gorror.CreateError(gorror.ValidationError, "name is missing")
+		return errors.New(i18n.Tr("en-US","ValidationError") + " name is missing")
 	}
 	return uc.repo.DeleteListByName(&List{Name: name})
 }
