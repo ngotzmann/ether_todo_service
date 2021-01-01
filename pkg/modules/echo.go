@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func DefaultEchoHttpServer(cfg config.Service) *echo.Echo {
+func DefaultEchoHttpServer(cfg config.Server) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.HideBanner = true

@@ -6,6 +6,7 @@ import (
 	"ether_todo/pkg/modules"
 	"github.com/jasonlvhit/gocron"
 	"github.com/kataras/i18n"
+	"strconv"
 )
 
 func main() {
@@ -13,11 +14,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	e := modules.DefaultHttpServer()
 	e = v1.Endpoints(e)
 	startCron()
-	a := modules.ProvideServiceCfg().Port
-	e.Logger.Fatal(e.Start(":" + a))
+	e.Logger.Fatal(e.Start(":" + strconv.Itoa(modules.ProvideServiceCfg().Port)))
 }
 
 func startCron() {

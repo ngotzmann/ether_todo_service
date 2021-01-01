@@ -14,8 +14,8 @@ import (
 // Injectors from wire.go:
 
 func DefaultHttpServer() *echo.Echo {
-	service := ProvideServiceCfg()
-	echoEcho := DefaultEchoHttpServer(service)
+	server := ProvideServiceCfg()
+	echoEcho := DefaultEchoHttpServer(server)
 	return echoEcho
 }
 
@@ -31,14 +31,14 @@ func DefaultGorm() (*gorm.DB, error) {
 // wire.go:
 
 //Providers
-func ProvideServiceCfg() config.Service {
-	i := config.ReadConfig(config.Service{})
-	cfg := i.(config.Service)
+func ProvideServiceCfg() config.Server {
+	i := config.ReadConfig(config.Server{})
+	cfg := i.(config.Server)
 	return cfg
 }
 
-func ProvideDBsCfg() *config.Database {
+func ProvideDBsCfg() config.Database {
 	i := config.ReadConfig(config.Database{})
-	cfg := i.(*config.Database)
+	cfg := i.(config.Database)
 	return cfg
 }

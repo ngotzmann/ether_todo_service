@@ -2,6 +2,7 @@ package v1
 
 import (
 	"ether_todo/pkg/modules"
+	"ether_todo/pkg/modules/config"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
 	"github.com/labstack/gommon/log"
@@ -78,6 +79,7 @@ func testFindListByNameSuccessful(e *httpexpect.Expect, name string) {
 }
 
 func TestEchoClient(t *testing.T) {
+	config.CustomCfgLocation = "../../../config/local"
 	h := modules.DefaultHttpServer()
 	h = Endpoints(h)
 	srv := httptest.NewServer(h)

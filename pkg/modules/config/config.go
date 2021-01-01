@@ -1,60 +1,92 @@
 package config
 
 import (
-	"fmt"
-	viper "github.com/spf13/viper"
+	"flag"
+	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/viper"
+	"log"
 	"reflect"
+	"strings"
 )
 
 var CustomCfgLocation string
 
 func ReadConfig(cfgStruct interface{}) interface{} {
-	viper.New()
-	/*if CustomCfgLocation != "" {
-		viper.AddConfigPath(CustomCfgLocation)
-	} else {*/
-		viper.AddConfigPath("./config/" + *getRunningEnv() + "/")
-	//}
-
-	viper.SetConfigName("Service")
-	_ = viper.ReadInConfig()
-
-	var c Service
-	_ = viper.Unmarshal(&c)
-
-	fmt.Println(c)
-	return nil
-
-	/*rammel := getType(cfgStruct)
-	viper.SetConfigName(rammel)
-	viper.SetConfigType("yaml")*/
-//	viper.AutomaticEnv()
-
-/*	err := viper.ReadInConfig()
+	viper.AddConfigPath(getPath())
+	viper.SetConfigName(getStructType(cfgStruct))
+	viper.SetConfigType("yml")
+	viper.AutomaticEnv()
+	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	//err = viper.Unmarshal(&cfgStruct)
 
-
-	//No values are loaded from
-	var s *Service
-	err = viper.Unmarshal(&s)
-	fmt.Println(s)
-	return cfgStruct*/
+	err = mapstructure.Decode(getCfg(cfgStruct), &cfgStruct)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return cfgStruct
 }
 
-func getType(i interface{}) string {
-	if t := reflect.TypeOf(i); t.Kind() == reflect.Ptr {
-		return "*" + t.Elem().Name()
+func getCfg(cfgStruct interface{}) interface{} {
+	var i interface{}
+	err := viper.Unmarshal(&i)
+	if err != nil {
+		log.Fatal(err)
+	}
+	cfgMap := i.(map[string]interface{})
+	normalizedCfgMap := cfgMap[strings.ToLower(getStructType(cfgStruct))]
+	return normalizedCfgMap
+}
+
+func getPath() string {
+	if CustomCfgLocation != "" {
+		return CustomCfgLocation
 	} else {
-		return t.Name()
+		return "./config/" + *getRunningEnv()
+	}
+}
+
+func getStructType(i interface{}) string {
+	if t := reflect.TypeOf(i); t.Kind() == reflect.Ptr {
+		return strings.ToLower(t.Elem().Name())
+	} else {
+		return strings.ToLower(t.Name())
 	}
 }
 
 func getRunningEnv() *string {
-	//return flag.String("env", "local", "The environment this service is deployed")
-	//var blubb *string
+	if flag.Lookup("env") == nil {
+		return flag.String("env", "local", "this is foo")
+	}
 	var result = "local"
 	return &result
+}
+
+type Server struct {
+	Address 			 string
+	Port                 int
+	SessionSecret        string
+	SessionName          string
+	DefaultLang 		 string
+}
+
+type Database struct {
+	Dialect            string
+	Address            string
+	Port               int
+	Database           string
+	User               string
+	Password           string
+	MaxIdleConnections int
+	Logging            bool
+	Audit              bool
+	ShouldLog 		   bool
+	SSLMode 		   string
+}
+
+type Log struct {
+	LogFile              string
+	LogLevel             string
+	LogTimestampFormat   string
 }

@@ -3,7 +3,6 @@ package v1
 import (
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -33,9 +32,6 @@ func SaveList(c echo.Context) error {
 	if err := c.Bind(l); err != nil {
 		return err
 	}
-
-	fmt.Println(l)
-
 	l, err := uc.SaveList(l)
 	if err != nil {
 		return err

@@ -20,14 +20,14 @@ func DefaultGorm() (*gorm.DB, error) {
 }
 
 //Providers
-func ProvideServiceCfg() config.Service {
-	i := config.ReadConfig(config.Service{})
-	cfg := i.(config.Service)
+func ProvideServiceCfg() config.Server {
+	i := config.ReadConfig(config.Server{})
+	cfg := i.(config.Server)
 	return cfg
 }
 
-func ProvideDBsCfg() *config.Database {
+func ProvideDBsCfg() config.Database {
 	i := config.ReadConfig(config.Database{})
-	cfg := i.(*config.Database)
+	cfg := i.(config.Database)
 	return cfg
 }
