@@ -1,11 +1,12 @@
 package modules
 
 import (
+	"ether_todo/pkg/modules/config"
 	"github.com/jinzhu/gorm"
 )
 
 
-func DefaultGormDB(cfg *Config, log *Logger) (*gorm.DB, error) {
+func DefaultGormDB(cfg *config.Database) (*gorm.DB, error) {
 
 	dsn := "host="+cfg.DBAddress+
 		   " port="+cfg.DBPort+

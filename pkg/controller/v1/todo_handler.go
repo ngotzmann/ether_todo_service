@@ -3,7 +3,7 @@ package v1
 import (
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
-	"github.com/ngotzmann/gorror"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,8 +31,10 @@ func FindListByName(c echo.Context) error {
 func SaveList(c echo.Context) error {
 	l := &todo.List{}
 	if err := c.Bind(l); err != nil {
-		return gorror.CreateError(gorror.InternalServerError, err.Error())
+		return err
 	}
+
+	fmt.Println(l)
 
 	l, err := uc.SaveList(l)
 	if err != nil {

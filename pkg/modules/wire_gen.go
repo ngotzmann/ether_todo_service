@@ -6,6 +6,7 @@
 package modules
 
 import (
+	"ether_todo/pkg/modules/config"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 )
@@ -13,17 +14,31 @@ import (
 // Injectors from wire.go:
 
 func DefaultHttpServer() *echo.Echo {
-	config := DefaultConfig()
-	echoEcho := DefaultEchoHttpServer(config)
+	service := ProvideServiceCfg()
+	echoEcho := DefaultEchoHttpServer(service)
 	return echoEcho
 }
 
 func DefaultGorm() (*gorm.DB, error) {
-	config := DefaultConfig()
-	logger := DefaultFileLogger(config)
-	db, err := DefaultGormDB(config, logger)
+	database := ProvideDBsCfg()
+	db, err := DefaultGormDB(database)
 	if err != nil {
 		return nil, err
 	}
 	return db, nil
+}
+
+// wire.go:
+
+//Providers
+func ProvideServiceCfg() config.Service {
+	i := config.ReadConfig(config.Service{})
+	cfg := i.(config.Service)
+	return cfg
+}
+
+func ProvideDBsCfg() *config.Database {
+	i := config.ReadConfig(config.Database{})
+	cfg := i.(*config.Database)
+	return cfg
 }

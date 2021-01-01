@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/ngotzmann/gorror"
 )
 
 func getTestModel() *List {
@@ -17,7 +16,6 @@ func getTestModel() *List {
 }
 
 func TestModelValidationSuccess(t *testing.T) {
-	gorror.Init("")
 	u := getTestModel()
 	err := u.Validation()
 	if err != nil {
@@ -27,7 +25,6 @@ func TestModelValidationSuccess(t *testing.T) {
 }
 
 func TestModelValidationFailed(t *testing.T) {
-	gorror.Init("")
 	u := getTestModel()
 	u.ID = uuid.UUID{}
 	err := u.Validation()

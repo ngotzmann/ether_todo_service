@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"ether_todo/pkg/modules/config"
 	"io"
 	"os"
 
@@ -11,13 +12,13 @@ type Logger struct {
 	*logrus.Logger
 }
 
-func DefaultFileLogger(cfg *Config) *Logger {
-	logrus := logrus.New()
-	logrus.SetFormatter(GetFormatter(cfg.LogTimestampFormat))
-	setLogLvl(logrus, cfg.LogLevel)
-	setLogOutput(logrus, cfg.LogFile)
+func DefaultFileLogger(cfg *config.Log) *Logger {
+	log := logrus.New()
+	log.SetFormatter(GetFormatter(cfg.LogTimestampFormat))
+	setLogLvl(log, cfg.LogLevel)
+	setLogOutput(log, cfg.LogFile)
 
-	var logger = &Logger{logrus}
+	var logger = &Logger{log}
 	return logger
 }
 

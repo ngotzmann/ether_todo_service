@@ -1,10 +1,11 @@
 package todo
 
 import (
+	"errors"
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
-	"github.com/ngotzmann/gorror"
+	"github.com/kataras/i18n"
 	"time"
 )
 
@@ -24,7 +25,7 @@ type List struct {
 
 	Name      string    `json:"name" validate:"required" gorm:"name"`
 	Tasks     []Task    `json:"tasks" gorm:"foreignkey:list_id"`
-	LiveTime  LiveTime  `json:"live_time" validate:"required"`
+	LiveTime  LiveTime  `json:"liveTime" validate:"required"`
 }
 
 func (l *List) Validation() error {
@@ -40,7 +41,7 @@ func (l *List) Validation() error {
 			specErrMsg := fmt.Sprintf("%v", fe)
 			errMsgs += specErrMsg + "; "
 		}
-		err = gorror.CreateError(gorror.ValidationError, errMsgs)
+		err = errors.New(i18n.Tr("ValidationError", "en-US") + " " + errMsgs)
 	}
 	return err
 }
@@ -50,5 +51,5 @@ func (l *List) ValidateLiveTimeEnum() error {
 	case Day, Month, Year:
 		return nil
 	}
-	return gorror.CreateError(gorror.ValidationError, "Not allowed LiveTime value")
+	return errors.New(i18n.Tr("ValidationError", "en-US") + " not allowed LiveTime value")
 }

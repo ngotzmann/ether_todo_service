@@ -1,11 +1,13 @@
 package persistence
 
 import (
+	"errors"
 	"ether_todo/pkg/modules"
 	"ether_todo/pkg/todo"
 	"github.com/google/uuid"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/ngotzmann/gorror"
+	"github.com/kataras/i18n"
+	"github.com/labstack/gommon/log"
 )
 
 type todoListRepo struct {
@@ -16,9 +18,9 @@ func NewTodoListRepo() todo.IRepository {
 }
 
 func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
-	db, err :=modules.DefaultGorm()
+	db, err := modules.DefaultGorm()
 	if err != nil {
-		err = gorror.CreateError(gorror.DatabaseError, err.Error())
+		err := errors.New(i18n.Tr("DatabaseError", "en-US"))
 		return nil, err
 	}
 
@@ -35,7 +37,6 @@ func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
 func (t *todoListRepo) SaveList(l *todo.List) (*todo.List, error) {
 	db, err := modules.DefaultGorm()
 	if err != nil {
-		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return nil, err
 	}
 	if l.ID.String() == "00000000-0000-0000-0000-000000000000"  {
@@ -47,9 +48,8 @@ func (t *todoListRepo) SaveList(l *todo.List) (*todo.List, error) {
 }
 
 func (t *todoListRepo) DeleteListByName(l *todo.List) error {
-	db, err :=modules.DefaultGorm()
+	db, err := modules.DefaultGorm()
 	if err != nil {
-		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return err
 	}
 	db.Unscoped().Where("name = ?", l.Name).Delete(&l)
@@ -57,11 +57,9 @@ func (t *todoListRepo) DeleteListByName(l *todo.List) error {
 }
 
 func (t *todoListRepo) DeleteOutdatedLists() {
-	db, err :=modules.DefaultGorm()
+	db, err := modules.DefaultGorm()
 	if err != nil {
-		err = gorror.CreateError(gorror.DatabaseError, err.Error())
-		//TODO:
-		//log.Error(err)
+		log.Error(err)
 	}
 	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '1 day'", todo.Day).Delete(&todo.List{})
 	db.Unscoped().Where("live_time = ? AND updated_at < CURRENT_TIMESTAMP - INTERVAL '30 day'", todo.Month).Delete(&todo.List{})
@@ -71,7 +69,6 @@ func (t *todoListRepo) DeleteOutdatedLists() {
 func (t *todoListRepo) Migration() error {
 	db, err :=modules.DefaultGorm()
 	if err != nil {
-		err = gorror.CreateError(gorror.DatabaseError, err.Error())
 		return err
 	}
 	db.AutoMigrate(&todo.List{}, &todo.Task{})

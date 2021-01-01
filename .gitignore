@@ -3,3 +3,4 @@ vendor/
 .vscode/
 main
 *.log
+ether_todo_service

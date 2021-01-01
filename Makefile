@@ -33,7 +33,14 @@ test: ## Execute linter and go tests
 
 build: ## Build This service
 #	@go generate **/*.go
-	@go build cmd/main.go || echo "🔥 go build failed"
+	@go build -o ether_todo_service cmd/main.go || echo "🔥 go build failed"
+
+run: ## Build This service
+#	@go generate **/*.go
+	@./ether_todo_service
+
+run-dev-db: ## Run docker postgres db 
+	@docker compose up -d
 
 docker-build: ## Build application and put it in docker container
-	@docker build . || echo "🔥 docker build failed"
+	@docker build . -t ether_todo_service

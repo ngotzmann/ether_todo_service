@@ -5,7 +5,6 @@ import (
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
 	"github.com/labstack/gommon/log"
-	"github.com/ngotzmann/gorror"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -79,8 +78,6 @@ func testFindListByNameSuccessful(e *httpexpect.Expect, name string) {
 }
 
 func TestEchoClient(t *testing.T) {
-	cfg := modules.TestConfig()
-	gorror.Init(cfg.GorrorFilePath)
 	h := modules.DefaultHttpServer()
 	h = Endpoints(h)
 	srv := httptest.NewServer(h)
