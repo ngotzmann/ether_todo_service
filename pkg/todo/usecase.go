@@ -26,7 +26,7 @@ func NewUsecase(repo IRepository, service IService) IUsecase {
 
 func (uc *Usecase) FindListByName(name string) (*List, error) {
 	if name == "" {
-		err := errors.New(i18n.Tr("ValidationError", "en-US") + " name is missing")
+		err := errors.New(i18n.Tr("en-US", "ValidationError") + " name is missing")
 		return nil, err
 	}
 	l, err := uc.repo.FindListByName(name)
@@ -48,7 +48,7 @@ func (uc *Usecase) SaveList(l *List) (*List, error) {
 
 func (uc *Usecase) DeleteListByName(name string) error {
 	if name == "" {
-		return errors.New(i18n.Tr("ValidationError", "en-US") + " name is missing")
+		return errors.New(i18n.Tr("en-US","ValidationError") + " name is missing")
 	}
 	return uc.repo.DeleteListByName(&List{Name: name})
 }

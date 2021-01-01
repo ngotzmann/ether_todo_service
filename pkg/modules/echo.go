@@ -16,7 +16,7 @@ func DefaultEchoHttpServer(cfg config.Server) *echo.Echo {
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
-	//e.HTTPErrorHandler = gorror.CustomEchoHTTPErrorHandler
+	e.HTTPErrorHandler = CustomEchoHTTPErrorHandler
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte(cfg.SessionSecret))))
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

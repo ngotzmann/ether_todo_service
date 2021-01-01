@@ -41,7 +41,7 @@ func (l *List) Validation() error {
 			specErrMsg := fmt.Sprintf("%v", fe)
 			errMsgs += specErrMsg + "; "
 		}
-		err = errors.New(i18n.Tr("ValidationError", "en-US") + " " + errMsgs)
+		err = errors.New(i18n.Tr("en-US", "ValidationError") + " " + errMsgs)
 	}
 	return err
 }
@@ -51,5 +51,5 @@ func (l *List) ValidateLiveTimeEnum() error {
 	case Day, Month, Year:
 		return nil
 	}
-	return errors.New(i18n.Tr("ValidationError", "en-US") + " not allowed LiveTime value")
+	return errors.New(i18n.Tr("en-US","ValidationError") + " not allowed LiveTime value")
 }

@@ -2,5 +2,5 @@ SessionError: Your session is corrupted
 InternalServerError: The server encountered an internal error and was unable to complete your request
 ValidationError: Please check your input data
 DatabaseError: No connection to the database could be established
-FileNotFoundError: File was not found maybe the path is incorrect, the file is missing, there are wrong access permissions or something else
+FileNotFoundError: File was not found maybe the path is incorrect, the file is missing, there are wrong access permissions...
 AuthenticationError: Authentication was not successful, check your given data

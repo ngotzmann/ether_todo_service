@@ -1,8 +1,10 @@
 package v1
 
 import (
+	"errors"
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
+	"github.com/kataras/i18n"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -32,7 +34,10 @@ func SaveList(c echo.Context) error {
 	if err := c.Bind(l); err != nil {
 		return err
 	}
-	l, err := uc.SaveList(l)
+	//l, err := uc.SaveList(l)
+	asd := i18n.Tr("en-US","ValidationError")
+	err := errors.New(asd)
+
 	if err != nil {
 		return err
 	} else {

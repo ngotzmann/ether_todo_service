@@ -1,10 +1,11 @@
 database:
   dialect: postgres
-  address: infrastructure.server.ngotzmann.net
+  address: localhost
   port: 5432
-  database: ether_todo
-  user: ether_todo
-  password: YhoGmhht0CsR3b1VY1ma2vV5NYxlrByL7jL
+  database: test
+  user: test
+  password: t3sT
   maxIdleConnections: 10
   logging: true
   audit: false
+  SSLMode: disable

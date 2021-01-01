@@ -20,7 +20,7 @@ func NewTodoListRepo() todo.IRepository {
 func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
 	db, err := modules.DefaultGorm()
 	if err != nil {
-		err := errors.New(i18n.Tr("DatabaseError", "en-US"))
+		err := errors.New(i18n.Tr("en-US", "DatabaseError"))
 		return nil, err
 	}
 

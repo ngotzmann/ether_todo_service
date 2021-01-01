@@ -33,7 +33,7 @@ func (m *Task) Validation() error {
 			specErrMsg := fmt.Sprintf("%v", fe)
 			errMsgs += specErrMsg + "; "
 		}
-		err = errors.New(i18n.Tr("ValidationError", "en-US") + " " + errMsgs)
+		err = errors.New(i18n.Tr("en-US","ValidationError") + " " + errMsgs)
 	}
 	return err
 }

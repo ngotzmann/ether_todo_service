@@ -22,7 +22,9 @@ func main() {
 }
 
 func startCron() {
-	uc := injector.TodoUsecase()
-	gocron.Every(1).Day().Do(uc.CleanOutatedLists)
+	err := gocron.Every(1).Day().Do(injector.TodoUsecase().CleanOutatedLists)
+	if err != nil {
+		panic(err)
+	}
 	gocron.Start()
 }
