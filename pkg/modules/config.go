@@ -5,7 +5,7 @@ package modules
 func DefaultConfig() *Config {
 	return &Config{
 		GorrorFilePath:       "config/",
-		Port:                 "8080",
+		Port:                 "21000",
 		SessionSecret:        "S3cReT",
 		SessionName:          "defaultSession",
 		DBDialect:            "postgres",
@@ -28,7 +28,7 @@ func DefaultConfig() *Config {
 func TestConfig() *Config {
 	return &Config{
 		GorrorFilePath:       "../../../config/",
-		Port:                 "8080",
+		Port:                 "21000",
 		SessionSecret:        "S3cReT",
 		SessionName:          "defaultSession",
 		DBDialect:            "postgres",
