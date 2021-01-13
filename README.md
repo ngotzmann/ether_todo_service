@@ -3,8 +3,6 @@
 EtherToDo is a multi user todo list without creating an account.  
 Just create your todo list and share the link.  
 
-[Try it out](https://todo.sysfox.io)
-
 ## Installation
 
 ### Requirements
