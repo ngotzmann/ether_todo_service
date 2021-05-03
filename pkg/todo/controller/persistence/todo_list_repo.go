@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"errors"
-	"ether_todo/pkg/modules"
+	"ether_todo/pkg/glue"
 	"ether_todo/pkg/todo"
 	"github.com/google/uuid"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -18,7 +18,7 @@ func NewTodoListRepo() todo.IRepository {
 }
 
 func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
-	db, err := modules.DefaultGorm()
+	db, err := glue.DefaultGorm()
 	if err != nil {
 		err := errors.New(i18n.Tr("en-US", "DatabaseError"))
 		return nil, err
@@ -35,7 +35,7 @@ func (t *todoListRepo) FindListByName(name string) (*todo.List, error) {
 }
 
 func (t *todoListRepo) SaveList(l *todo.List) (*todo.List, error) {
-	db, err := modules.DefaultGorm()
+	db, err := glue.DefaultGorm()
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (t *todoListRepo) SaveList(l *todo.List) (*todo.List, error) {
 }
 
 func (t *todoListRepo) DeleteListByName(l *todo.List) error {
-	db, err := modules.DefaultGorm()
+	db, err := glue.DefaultGorm()
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (t *todoListRepo) DeleteListByName(l *todo.List) error {
 }
 
 func (t *todoListRepo) DeleteOutdatedLists() {
-	db, err := modules.DefaultGorm()
+	db, err := glue.DefaultGorm()
 	if err != nil {
 		log.Error(err)
 	}
@@ -67,7 +67,7 @@ func (t *todoListRepo) DeleteOutdatedLists() {
 }
 
 func (t *todoListRepo) Migration() error {
-	db, err :=modules.DefaultGorm()
+	db, err := glue.DefaultGorm()
 	if err != nil {
 		return err
 	}

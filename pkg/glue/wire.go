@@ -1,9 +1,8 @@
 //+build wireinject
 
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
 	wire "github.com/google/wire"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
@@ -20,14 +19,20 @@ func DefaultGorm() (*gorm.DB, error) {
 }
 
 //Providers
-func ProvideServiceCfg() config.Server {
-	i := config.ReadConfig(config.Server{})
-	cfg := i.(config.Server)
+func ProvideServiceCfg() Server {
+	i := ReadConfig(Server{})
+	cfg := i.(Server)
 	return cfg
 }
 
-func ProvideDBsCfg() config.Database {
-	i := config.ReadConfig(config.Database{})
-	cfg := i.(config.Database)
+func ProvideDBsCfg() Database {
+	i := ReadConfig(Database{})
+	cfg := i.(Database)
+	return cfg
+}
+
+func ProvideLogCfg() Log {
+	i := ReadConfig(Log{})
+	cfg := i.(Log)
 	return cfg
 }

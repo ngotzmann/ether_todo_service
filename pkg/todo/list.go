@@ -26,6 +26,7 @@ type List struct {
 	Name      string    `json:"name" validate:"required" gorm:"name"`
 	Tasks     []Task    `json:"tasks" gorm:"foreignkey:list_id"`
 	LiveTime  LiveTime  `json:"liveTime" validate:"required"`
+	Description string  `json:"description"`
 }
 
 func (l *List) Validation() error {

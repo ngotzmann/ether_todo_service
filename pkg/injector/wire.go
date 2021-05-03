@@ -3,8 +3,8 @@
 package injector
 
 import (
-	"ether_todo/pkg/controller/persistence"
 	"ether_todo/pkg/todo"
+	"ether_todo/pkg/todo/controller/persistence"
 	"github.com/google/wire"
 )
 

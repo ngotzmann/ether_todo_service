@@ -1,7 +1,6 @@
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -9,7 +8,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func DefaultEchoHttpServer(cfg config.Server) *echo.Echo {
+func DefaultEchoHttpServer(cfg Server) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.HideBanner = true

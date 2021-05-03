@@ -1,7 +1,6 @@
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
 	"io"
 	"os"
 
@@ -12,7 +11,7 @@ type Logger struct {
 	*logrus.Logger
 }
 
-func DefaultFileLogger(cfg *config.Log) *Logger {
+func DefaultFileLogger(cfg *Log) *Logger {
 	log := logrus.New()
 	log.SetFormatter(GetFormatter(cfg.LogTimestampFormat))
 	setLogLvl(log, cfg.LogLevel)

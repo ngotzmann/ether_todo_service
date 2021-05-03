@@ -1,8 +1,7 @@
 package v1
 
 import (
-	"ether_todo/pkg/modules"
-	"ether_todo/pkg/modules/config"
+	"ether_todo/pkg/glue"
 	"fmt"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
@@ -83,8 +82,8 @@ func testFindListByNameSuccessful(e *httpexpect.Expect, name string) {
 
 func TestEchoClient(t *testing.T) {
 	_, _ = i18n.New(i18n.Glob("../../../locales/*/*"), "en-US")
-	config.CustomCfgLocation = "../../../config/local"
-	h := modules.DefaultHttpServer()
+	glue.CustomCfgLocation = "../../../config/local"
+	h := glue.DefaultHttpServer()
 	h = Endpoints(h)
 	srv := httptest.NewServer(h)
 	defer srv.Close()

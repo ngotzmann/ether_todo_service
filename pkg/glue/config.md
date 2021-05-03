@@ -1,3 +1,5 @@
+# README ServiceGlue
+
 ## How to add new config
 
 **At the moment just .yml config files are support**
@@ -11,6 +13,6 @@
 4. You can easily extract your struct:
 
 ```golang
-i := config.ReadConfig(urpkg.Websocket{})
-cfg := i.(urpkg.Websocket)
+i := config.ReadConfig(yourpkg.Websocket{})
+cfg := i.(yourpkg.Websocket)
 ```

@@ -1,13 +1,12 @@
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
 	"github.com/jinzhu/gorm"
 	"strconv"
 )
 
 
-func DefaultGormDB(cfg config.Database) (*gorm.DB, error) {
+func DefaultGormDB(cfg Database) (*gorm.DB, error) {
 
 	dsn := "host="+cfg.Address+
 		   " port="+strconv.Itoa(cfg.Port)+

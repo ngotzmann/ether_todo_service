@@ -1,4 +1,4 @@
-package modules
+package glue
 
 import (
 	"github.com/labstack/echo/v4"
