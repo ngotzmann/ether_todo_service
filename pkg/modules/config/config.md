@@ -2,7 +2,7 @@
 
 **At the moment just .yml config files are support**
 
-1. Set custom config path or use default config path which is `./config/"env"`
+1. Set custom config path or use default config path which is `./config/"env"`  
   1.1 set env with -env flag by start, default env is "local"
 2. Define your struct  
 2.1 struct name must be the same config file name  
