@@ -1,8 +1,10 @@
 package v1
 
 import (
-	"ether_todo/pkg/modules"
-	"ether_todo/pkg/modules/config"
+	"errors"
+	"ether_todo/pkg/glue"
+	"ether_todo/pkg/glue/config"
+	"ether_todo/pkg/injector"
 	"fmt"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
@@ -21,13 +23,13 @@ func positivIntegrationTestCreate(e *httpexpect.Expect) {
 		LiveTime: "keep",
 	})
 	testFindListByNameSuccessful(e, name)
-	err := uc.DeleteListByName(name)
+	err := s.DeleteListByName(name)
 	if err != nil {
 		log.Error(err)
 	}
 }
 //Create list -> check if list is created -> add tasks -> check if task is created -> create list with same name -> check if no tasks exists
-//-> delete list
+//-> delete listCleanOutatedLists
 func positivIntegrationTestOverwrite(e *httpexpect.Expect) {
 	name := "int_positiv_integration_test_overwrite"
 	testCreateListSuccessful(e, &reqList{
@@ -42,20 +44,23 @@ func positivIntegrationTestOverwrite(e *httpexpect.Expect) {
 	})
 	testFindListByNameSuccessful(e, name)
 
-	err := uc.DeleteListByName(name)
+	err := s.DeleteListByName(name)
 	if err != nil {
 		log.Error(err)
 	}
 }
 
 func negativIntegrationTestCreateValidationFailed(e *httpexpect.Expect) {
-	res := e.POST("/todo/list").
-		WithForm(&reqList{
+	req := reqList{
 		Name:     "",
 		LiveTime: "keep",
-	}).Expect()
+	}
+	/*res := e.POST("/todo/list").
+		WithForm(req).Expect().Status(http.StatusBadRequest)*/
+	path := "/todo/list"
+	res := e.POST(path).WithForm(req).Expect().Status(400) //.Status(http.StatusBadRequest)
+
 	fmt.Println(res)
-	//.Status(http.StatusBadRequest)
 }
 
 func testCreateListSuccessful(e *httpexpect.Expect, reqBody *reqList) {
@@ -82,10 +87,16 @@ func testFindListByNameSuccessful(e *httpexpect.Expect, name string) {
 }
 
 func TestEchoClient(t *testing.T) {
-	_, _ = i18n.New(i18n.Glob("../../../locales/*/*"), "en-US")
+	_, err := i18n.New(i18n.Glob("./locales/*/*"), "en-US")
+	if err != nil {
+		panic(err)
+	}
+	err = errors.New(i18n.Tr("en-US","ValidationError") + " " + "errMsgs")
+
 	config.CustomCfgLocation = "../../../config/local"
-	h := modules.DefaultHttpServer()
+	h := glue.DefaultHttpServer()
 	h = Endpoints(h)
+	injector.TodoService().Migration()
 	srv := httptest.NewServer(h)
 	defer srv.Close()
 

@@ -1,7 +1,7 @@
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
+	"ether_todo/pkg/glue/config"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"

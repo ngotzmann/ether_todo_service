@@ -1,9 +1,9 @@
 package main
 
 import (
-	v1 "ether_todo/pkg/controller/v1"
+	v1 "ether_todo/pkg/adapter/v1"
+	"ether_todo/pkg/glue"
 	"ether_todo/pkg/injector"
-	"ether_todo/pkg/modules"
 	"github.com/jasonlvhit/gocron"
 	"github.com/kataras/i18n"
 	"strconv"
@@ -15,14 +15,19 @@ func main() {
 		panic(err)
 	}
 
-	e := modules.DefaultHttpServer()
+	err = injector.TodoService().Migration()
+	if err != nil {
+		panic(err)
+	}
+
+	e := glue.DefaultHttpServer()
 	e = v1.Endpoints(e)
 	startCron()
-	e.Logger.Fatal(e.Start(":" + strconv.Itoa(modules.ProvideServiceCfg().Port)))
+	e.Logger.Fatal(e.Start(":" + strconv.Itoa(glue.ProvideServiceCfg().Port)))
 }
 
 func startCron() {
-	err := gocron.Every(1).Day().Do(injector.TodoUsecase().CleanOutatedLists)
+	err := gocron.Every(1).Day().Do(injector.TodoService().CleanOutatedLists)
 	if err != nil {
 		panic(err)
 	}

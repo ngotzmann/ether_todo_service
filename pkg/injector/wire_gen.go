@@ -6,15 +6,14 @@
 package injector
 
 import (
-	"ether_todo/pkg/controller/persistence"
+	"ether_todo/pkg/adapter/persistence"
 	"ether_todo/pkg/todo"
 )
 
 // Injectors from wire.go:
 
-func TodoUsecase() todo.IUsecase {
+func TodoService() todo.IService {
 	iRepository := persistence.NewTodoListRepo()
 	iService := todo.NewService(iRepository)
-	iUsecase := todo.NewUsecase(iRepository, iService)
-	return iUsecase
+	return iService
 }

@@ -1,9 +1,9 @@
 //+build wireinject
 
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
+	"ether_todo/pkg/glue/config"
 	wire "github.com/google/wire"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"

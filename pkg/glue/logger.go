@@ -1,7 +1,7 @@
-package modules
+package glue
 
 import (
-	"ether_todo/pkg/modules/config"
+	"ether_todo/pkg/glue/config"
 	"io"
 	"os"
 

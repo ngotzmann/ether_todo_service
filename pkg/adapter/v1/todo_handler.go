@@ -1,16 +1,14 @@
 package v1
 
 import (
-	"errors"
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
-	"github.com/kataras/i18n"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-var uc = injector.TodoUsecase()
+var s = injector.TodoService()
 
 func Endpoints(e *echo.Echo) *echo.Echo {
 	e.GET("/todo/list/:name", FindListByName)
@@ -21,7 +19,7 @@ func Endpoints(e *echo.Echo) *echo.Echo {
 func FindListByName(c echo.Context) error {
 	name := c.Param("name")
 
-	l, err := uc.FindListByName(name)
+	l, err := s.FindListByName(name)
 	if err != nil {
 		return err
 	} else {
@@ -34,18 +32,11 @@ func SaveList(c echo.Context) error {
 	if err := c.Bind(l); err != nil {
 		return err
 	}
-	//l, err := uc.SaveList(l)
-	asd := i18n.Tr("en-US","ValidationError")
-	err := errors.New(asd)
+	l, err := s.SaveList(l)
 
 	if err != nil {
 		return err
 	} else {
 		return c.JSON(http.StatusOK, l)
 	}
-}
-
-func CleanOutatedLists(c echo.Context) error {
-	uc.CleanOutatedLists()
-	return c.JSON(http.StatusOK, "frutti")
 }
