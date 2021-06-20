@@ -11,11 +11,11 @@ import (
 func DefaultEchoHttpServer(cfg Server) *echo.Echo {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
-	e.HideBanner = true
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.RequestID())
 	e.HTTPErrorHandler = CustomEchoHTTPErrorHandler
+	e.HideBanner = true
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte(cfg.SessionSecret))))
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{

@@ -3,12 +3,12 @@
 package injector
 
 import (
+	"ether_todo/pkg/adapter/persistence"
 	"ether_todo/pkg/todo"
-	"ether_todo/pkg/todo/controller/persistence"
 	"github.com/google/wire"
 )
 
-func TodoUsecase() todo.IUsecase {
-	wire.Build(persistence.NewTodoListRepo, todo.NewService, todo.NewUsecase)
-	return &todo.Usecase{}
+func TodoService() todo.IService {
+	wire.Build(persistence.NewTodoListRepo, todo.NewService)
+	return &todo.Service{}
 }

@@ -1,14 +1,8 @@
 package v1
 
 import (
-<<<<<<< HEAD:pkg/todo/controller/v1/todo_handler_test.go
 	"ether_todo/pkg/glue"
-=======
-	"errors"
-	"ether_todo/pkg/glue"
-	"ether_todo/pkg/glue/config"
 	"ether_todo/pkg/injector"
->>>>>>> e094560bbcd26c603f9a4d5c2441a6ad529a71b1:pkg/adapter/v1/todo_handler_test.go
 	"fmt"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
@@ -91,18 +85,13 @@ func testFindListByNameSuccessful(e *httpexpect.Expect, name string) {
 }
 
 func TestEchoClient(t *testing.T) {
-<<<<<<< HEAD:pkg/todo/controller/v1/todo_handler_test.go
-	_, _ = i18n.New(i18n.Glob("../../../locales/*/*"), "en-US")
 	glue.CustomCfgLocation = "../../../config/local"
-=======
+
 	_, err := i18n.New(i18n.Glob("./locales/*/*"), "en-US")
 	if err != nil {
 		panic(err)
 	}
-	err = errors.New(i18n.Tr("en-US","ValidationError") + " " + "errMsgs")
 
-	config.CustomCfgLocation = "../../../config/local"
->>>>>>> e094560bbcd26c603f9a4d5c2441a6ad529a71b1:pkg/adapter/v1/todo_handler_test.go
 	h := glue.DefaultHttpServer()
 	h = Endpoints(h)
 	injector.TodoService().Migration()
