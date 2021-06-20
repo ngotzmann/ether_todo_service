@@ -29,7 +29,7 @@ func (s *Service) IsListDuplicated(name string) (bool, error) {
 	}
 }
 
-//If a list with the given name is already exists it will be deleted with all appended tasks and a new list will be created
+// OverwriteExistsList If a list with the given name is already exists it will be deleted with all appended tasks and a new list will be created
 //If a list with the given name is not exist it will just created
 func (s *Service) OverwriteExistsList(l *List) (*List, error) {
 	l.Name = strings.ToLower(l.Name)

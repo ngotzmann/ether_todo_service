@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"ether_todo/pkg/todo"
 	"github.com/gorilla/websocket"
 	"log"
 )
@@ -18,57 +17,55 @@ type Hub struct {
 	Subscriptions []Subscription
 }
 
-type Client struct {
-	Id         string
-	Connection *websocket.Conn
-}
-
 type Subscription struct {
-	Topic  string
+	Topic  string //listName
 	Client *Client
 }
 
 type Request struct {
 	Action  string `json:"action"`
 	Topic   string `json:"topic"`
-	Message todo.Task
+	ObjectJson string `json:"objectJson"`
 }
 
 //TODO: write error in channel
-func (h *Hub) Run(conn *websocket.Conn, clt Client) error {
+//TODO: Rename method
+func (h *Hub) Handler(conn *websocket.Conn, clt Client) error {
 	for {
 		mType, p, err := conn.ReadMessage()
 		if err != nil {
-			h.RemoveClient(clt)
+			h.removeClient(clt)
 			return err
 		}
-		err = h.HandleReceiveMessage(clt, mType, p)
+		err = h.handleReceiveMessage(clt, mType, p)
 		if err != nil {
 			return err
 		}
 	}
 }
 
-func (h *Hub) HandleReceiveMessage(clt Client, messageType int, payload []byte) error {
-	m := Request{}
-	err := json.Unmarshal(payload, &m)
+func (h *Hub) AddClient(clt Client) {
+	h.Clients = append(h.Clients, clt)
+}
+
+func (h *Hub) handleReceiveMessage(clt Client, messageType int, payload []byte) error {
+	r := Request{}
+	err := json.Unmarshal(payload, &r)
 	if err != nil {
 		return err
 	}
-
-	switch m.Action {
-
+	switch r.Action {
 	case SUBSCRIBE:
-		h.Subscribe(clt, m.Topic)
+		h.subscribe(clt, r.Topic)
 		break
 	case PUBLISH:
-		err := h.Publish(m.Topic, messageType, m.Message)
+		err := h.publish(r.Topic, messageType, r.ObjectJson)
 		if err != nil {
 			return err
 		}
 		break
 	case UNSUBSCRIBE:
-		h.Unsubscribe(clt, m.Topic)
+		h.unsubscribe(clt, r.Topic)
 		break
 	default:
 		break
@@ -76,22 +73,19 @@ func (h *Hub) HandleReceiveMessage(clt Client, messageType int, payload []byte) 
 	return nil
 }
 
-func (h *Hub) Publish(topic string, messageType int, message string) error {
-	subs := h.GetSubscriptionsByTopic(topic)
+func (h *Hub) publish(topic string, messageType int, message string) error {
+	subs := h.getSubscriptionsByTopic(topic)
 	for _, sub := range subs {
-		err := sub.Client.Send(messageType, message)
+		err := sub.Client.send(messageType, message)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
 }
-func (clt *Client) Send(messageType int, message string) error {
-	return clt.Connection.WriteMessage(messageType, []byte(message))
-}
 
-func (h *Hub) Subscribe(clt Client, topic string) {
-	cltSubs := h.GetSubscriptionsOfClient(topic, clt)
+func (h *Hub) subscribe(clt Client, topic string) {
+	cltSubs := h.getSubscriptionsOfClient(topic, clt)
 	if len(cltSubs) > 0 {
 		// client is subscribed this topic before
 		return
@@ -104,7 +98,7 @@ func (h *Hub) Subscribe(clt Client, topic string) {
 	log.Println(clt.Id + " subscribed to topic: " + topic)
 }
 
-func (h *Hub) GetSubscriptionsByTopic(t string) []Subscription {
+func (h *Hub) getSubscriptionsByTopic(t string) []Subscription {
 	var rslt []Subscription
 	for _, sub := range h.Subscriptions {
 		if sub.Topic == t {
@@ -114,10 +108,8 @@ func (h *Hub) GetSubscriptionsByTopic(t string) []Subscription {
 	return rslt
 }
 
-
-
-
-func (h *Hub) GetSubscriptionsOfClient(topic string, clt Client) []Subscription {
+//TODO move this method to client object
+func (h *Hub) getSubscriptionsOfClient(topic string, clt Client) []Subscription {
 	var rslt []Subscription
 	for _, sub := range h.Subscriptions {
 		if sub.Client.Id == clt.Id && sub.Topic == topic {
@@ -127,15 +119,12 @@ func (h *Hub) GetSubscriptionsOfClient(topic string, clt Client) []Subscription 
 	return rslt
 }
 
-func (h *Hub) AddClient(clt Client) {
-	h.Clients = append(h.Clients, clt)
-}
-
-func (h *Hub) RemoveClient(clt Client) {
+func (h *Hub) removeClient(clt Client) {
 	h.removeClientSubscriptions(clt)
 	h.removeClientFromList(clt)
 	log.Println("Connected clients and subscriptions ", len(h.Clients), len(h.Subscriptions))
 }
+
 func (h *Hub) removeClientFromList(clt Client) {
 	for index, c := range h.Clients {
 		if c.Id == clt.Id {
@@ -143,6 +132,7 @@ func (h *Hub) removeClientFromList(clt Client) {
 		}
 	}
 }
+
 func (h *Hub) removeClientSubscriptions(clt Client) {
 	for i, sub := range h.Subscriptions {
 		if clt.Id == sub.Client.Id {
@@ -151,8 +141,8 @@ func (h *Hub) removeClientSubscriptions(clt Client) {
 	}
 }
 
-func (h *Hub) Unsubscribe(clt Client, topic string) {
-	cltSubs := h.GetSubscriptionsOfClient(topic, clt)
+func (h *Hub) unsubscribe(clt Client, topic string) {
+	cltSubs := h.getSubscriptionsOfClient(topic, clt)
 	for i, sub := range cltSubs {
 		if sub.Client.Id == clt.Id && sub.Topic == topic {
 			h.Subscriptions = append(h.Subscriptions[:i], h.Subscriptions[i+1:]...)
@@ -160,4 +150,3 @@ func (h *Hub) Unsubscribe(clt Client, topic string) {
 	}
 	log.Println(clt.Id + " was unsubscribed of topic: " + topic)
 }
-

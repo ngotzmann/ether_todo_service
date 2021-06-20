@@ -4,6 +4,7 @@ import (
 	"ether_todo/pkg/injector"
 	"ether_todo/pkg/todo"
 	"ether_todo/pkg/todo/controller/v1/ws"
+	"ether_todo/pkg/todo/controller/v1/ws2"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -14,7 +15,7 @@ var uc = injector.TodoUsecase()
 func Endpoints(e *echo.Echo) *echo.Echo {
 	e.GET("/todo/list/:name", FindListByName)
 	e.POST("/todo/list", SaveList)
-	e.GET("/ws/:clientName", WebsocketHandler)
+	e.GET("/ws/:subId&:topic:", GlueGenericWebsocketHandler)
 	return e
 }
 
@@ -43,24 +44,38 @@ func SaveList(c echo.Context) error {
 	}
 }
 
-var h = &ws.Hub{}
-func WebsocketHandler(c echo.Context) error {
-	upgrader := getUpgrader()
-	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+
+var h = &ws2.Hub{}
+//TODO: Rename
+func GlueGenericWebsocketHandler(c echo.Context) error {
+	u := getUpgrader()
+	conn, err := u.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
 
-	cltN := c.Param("clientName")
-	clt := ws.Client{
-		Id: cltN,
+	//clt := getClient(c, conn)
+	//h.AddClient(clt)
+	//go h.Handler(conn, clt)
+
+	sub := getSubscription(c, conn)
+	//TODO: possible to move in h.Handler?
+	h.AddSubscription(sub)
+
+	//TODO: handle error
+	go h.Handler(conn, sub)
+	return nil
+}
+
+func getSubscription(c echo.Context, conn *websocket.Conn) ws2.Subscription {
+	id := c.Param("subId")
+	topic := c.Param("topic")
+	sub := ws2.Subscription{
+		Id: id,
+		Topic: topic,
 		Connection: conn,
 	}
-
-	h.AddClient(clt)
-	//TODO: get error over channel
-	go h.Run(conn, clt)
-	return nil
+	return sub
 }
 
 func getUpgrader() websocket.Upgrader {
@@ -70,4 +85,13 @@ func getUpgrader() websocket.Upgrader {
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
 	}
+}
+
+func getClient(c echo.Context, conn *websocket.Conn) ws.Client {
+	cltN := c.Param("clientName")
+	clt := ws.Client{
+		Id: cltN,
+		Connection: conn,
+	}
+	return clt
 }
